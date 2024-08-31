@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image Slider</title>
+    <style>
+        /* Basic styles for the slider */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            background-color: #70bdb1;
+        }
+
+        .slider-container {
+            width: 80%;
+            max-width: 1000px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            transition: opacity 0.5s ease-in-out;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            display: block;
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgb(248, 247, 247);
+            color: #120f0f;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        /* Navigation controls */
+        .prev, .next {
+            position: absolute;
+            top: 60%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: rgb(26, 248, 14);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        /* Thumbnail navigation */
+        .thumbnail-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .thumbnail-nav img {
+            width: 100px;
+            margin: 0 5px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .thumbnail-nav img.active {
+            opacity: 1;
+            border: 2px solid #333;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .slider-container {
+                width: 90%;
+            }
+
+            .thumbnail-nav img {
+                width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        <div class="slider-wrapper">
+            <div class="slide">
+                <img src="pexels-mario-cuadros-1166886-3585435 (1).jpg" height="1000" width="600" alt="Machu Picchu">
+                <div class="caption">Machu Picchu</div>
+            </div>
+            <div class="slide">
+                <img src="WhatsApp Image 2024-08-29 at 9.59.37 PM.jpeg" height="1000" width="600" alt="Great Wall of China">
+                <div class="caption">Great Wall of Chia</div>
+            </div>
+            <div class="slide">
+                <img src="WhatsApp Image 2024-08-29 at 9.59.38 PM (1).jpeg" height="1000" width="600" alt="Eiffel Tower">
+                <div class="caption">Eiffel Tower</div>
+            </div>
+            <div class="slide">
+                <img src="pexels-kristy-lague-535221-8884873.jpg" height="1000" width="600" alt="Grand Canyon">
+                <div class="caption">Grand Canyon</div>
+            </div>
+        </div>
+
+        <!-- Navigation controls -->
+        <button class="prev">&lt;</button>
+        <button class="next">&gt;</button>
+
+        <!-- Thumbnail navigation -->
+        <div class="thumbnail-nav">
+            <img src="https://via.placeholder.com/1000x600?text=Machu+Picchu" alt="Machu Picchu" class="thumb">
+            <img src="https://via.placeholder.com/1000x600?text=Great+Wall+of+China" alt="Great Wall of China" class="thumb">
+            <img src="https://via.placeholder.com/1000x600?text=Eiffel+Tower" alt="Eiffel Tower" class="thumb">
+            <img src="https://via.placeholder.com/1000x600?text=Grand+Canyon" alt="Grand Canyon" class="thumb">
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        const thumbnails = document.querySelectorAll('.thumb');
+        let currentIndex = 0;
+        let autoSlideInterval;
+
+        // Function to show the current slide
+        function showSlide(index) {
+            const totalSlides = slides.length;
+            currentIndex = (index + totalSlides) % totalSlides;
+            const offset = -currentIndex * 100;
+            document.querySelector('.slider-wrapper').style.transform = `translateX(${offset}%)`;
+            
+            // Update thumbnails
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // Next and previous slide controls
+        nextButton.addEventListener('click', () => {
+            showSlide(currentIndex + 1);
+        });
+
+        prevButton.addEventListener('click', () => {
+            showSlide(currentIndex - 1);
+        });
+
+        // Thumbnail click event
+        thumbnails.forEach((thumb, i) => {
+            thumb.addEventListener('click', () => {
+                showSlide(i);
+            });
+        });
+
+        // Auto-sliding functionality
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, 3000); // Slide every 3 seconds
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        // Start auto-sliding when the page loads
+        startAutoSlide();
+
+        // Pause auto-sliding on hover
+        document.querySelector('.slider-container').addEventListener('mouseenter', stopAutoSlide);
+        document.querySelector('.slider-container').addEventListener('mouseleave', startAutoSlide);
+
+        // Initialize the first slide
+        showSlide(currentIndex);
+    </script>
+
+</body>
+</html>
